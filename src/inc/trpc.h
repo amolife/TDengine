@@ -65,6 +65,7 @@ typedef struct {
 } SRpcInit;
 
 typedef struct {
+<<<<<<< Updated upstream
   int      cid;       // channel ID
   int      sid;       // session ID
   char *   meterId;   // meter ID
@@ -110,6 +111,47 @@ int taosSetSecurityInfo(int cid, int sid, char *id, int spi, int encrypt, char *
 void taosGetRpcConnInfo(void *thandle, uint32_t *peerId, uint32_t *peerIp, uint16_t *peerPort, int *cid, int *sid);
 
 int taosGetOutType(void *thandle);
+=======
+  uint32_t  sourceIp;
+  uint16_t  sourcePort;
+  char     *user;
+} SRpcConnInfo;
+
+typedef struct {
+  char *localIp;      // local IP used
+  uint16_t localPort; // local port
+  char *label;        // for debug purpose
+  int   numOfThreads; // number of threads to handle connections
+  int   sessions;     // number of sessions allowed
+  int   connType;     // TAOS_CONN_UDP, TAOS_CONN_TCPC, TAOS_CONN_TCPS
+  int   idleTime;     // milliseconds, 0 means idle timer is disabled
+
+  // the following is for client security only
+  char *user;         // user name
+  char  spi;          // security parameter index
+  char  encrypt;      // encrypt algorithm
+  char *secret;       // key for authentication
+  char *ckey;         // ciphering key
+
+  // call back to process incoming msg
+  void (*cfp)(char type, void *pCont, int contLen, void *ahandle, int32_t code);  
+
+  // call back to process notify the ipSet changes
+  void (*ufp)(void *ahandle, SRpcIpSet *pIpSet);
+
+  // call back to retrieve the client auth info 
+  int  (*afp)(char *meterId, char *spi, char *encrypt, char *secret, char *ckey); 
+} SRpcInit;
+
+void *rpcOpen(SRpcInit *pRpc);
+void  rpcClose(void *);
+void *rpcMallocCont(int contLen);
+void  rpcFreeCont(void *pCont);
+void  rpcSendRequest(void *thandle, SRpcIpSet *pIpSet, char msgType, void *pCont, int contLen, void *ahandle);
+void  rpcSendResponse(void *pConn, int32_t code, void *pCont, int contLen);
+void  rpcSendRedirectRsp(void *pConn, SRpcIpSet *pIpSet); 
+void  rpcGetConnInfo(void *thandle, SRpcConnInfo *pInfo);
+>>>>>>> Stashed changes
 
 #ifdef __cplusplus
 }
