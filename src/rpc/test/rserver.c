@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
       rpcInit.sessions = atoi(argv[++i]);
     } else if (strcmp(argv[i], "-o")==0 && i < argc-1) {
       tsCompressMsgSize = atoi(argv[++i]);
-    } else if (strcmp(argv[i], "-l")==0 && i < argc-1) {
+    } else if (strcmp(argv[i], "-w")==0 && i < argc-1) {
       commit = atoi(argv[++i]);
     } else if (strcmp(argv[i], "-d")==0 && i < argc-1) {
       rpcDebugFlag = atoi(argv[++i]);
